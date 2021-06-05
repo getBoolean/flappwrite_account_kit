@@ -65,7 +65,9 @@ class AuthNotifier extends ChangeNotifier {
 
   Future _getUser() async {
     try {
+      print('in _getUser');
       final res = await _account.get();
+      print(res);
       _user = User.fromMap(res.data);
       _status = AuthStatus.authenticated;
     } on AppwriteException catch (e) {
