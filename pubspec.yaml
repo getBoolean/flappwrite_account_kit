@@ -14,9 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
   appwrite:
-    git:
-      url: https://github.com/appwrite/sdk-for-flutter
-      ref: feat-realtime
+    git: https://github.com/appwrite/sdk-for-flutter
 
 dev_dependencies:
   flutter_test:

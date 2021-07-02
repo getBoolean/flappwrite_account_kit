@@ -5,11 +5,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: feat-realtime
-      resolved-ref: "29d2e36ab3ebe31d04e0c131c8fb21e170dac231"
+      ref: HEAD
+      resolved-ref: "3579314d288e4a640a5afe777d235bd16ae2e966"
       url: "https://github.com/appwrite/sdk-for-flutter"
     source: git
-    version: "0.6.2"
+    version: "0.6.4"
   async:
     dependency: transitive
     description:
@@ -442,15 +442,6 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
-  web_socket_channel:
-    dependency: transitive
-    description:
-      path: "."
-      ref: feat-headers
-      resolved-ref: "8ffcb0c7821d008287e5d4b57b0835b2e64c39c6"
-      url: "https://github.com/lohanidamodar/web_socket_channel"
-    source: git
     version: "2.1.0"
   win32:
     dependency: transitive
