@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:appwrite/appwrite.dart';
 
 extension FlAppwriteAccountKitExt on BuildContext {
-  AuthNotifier? get authNotifier => FlAppwriteAccountKit.of(this);
+  AuthNotifier get authNotifier => FlAppwriteAccountKit.of(this);
 }
 
 /// Exposes Nhost authentication information to its subtree.
@@ -26,10 +26,12 @@ class FlAppwriteAccountKit extends InheritedNotifier<AuthNotifier> {
     return oldWidget.notifier != notifier;
   }
 
-  static AuthNotifier? of(BuildContext context) {
-    return context
+  static AuthNotifier of(BuildContext context) {
+    final AuthNotifier? result = context
         .dependOnInheritedWidgetOfExactType<FlAppwriteAccountKit>()
         ?.notifier;
+    assert(result != null, 'No AuthNotifier found in context');
+    return result!;
   }
 }
 
@@ -150,9 +152,9 @@ class AuthNotifier extends ChangeNotifier {
   /// Create account
   ///
   Future<bool> create({
-    required String name,
     required String email,
     required String password,
+    String? name,
   }) async {
     _status = AuthStatus.authenticating;
     notifyListeners();
@@ -185,7 +187,7 @@ class AuthNotifier extends ChangeNotifier {
   Future<bool> updatePrefs({required Map<String, dynamic> prefs}) async {
     try {
       final res = await _account.updatePrefs(prefs: prefs);
-      _user = _user?.copyWith(prefs: res.data);
+      _user = User.fromMap(res.data);
       notifyListeners();
       return true;
     } on AppwriteException catch (e) {
@@ -208,15 +210,16 @@ class AuthNotifier extends ChangeNotifier {
 
   Future<bool> createOAuth2Session({
     required String provider,
-    String success = 'https://appwrite.io/auth/oauth2/success',
-    String failure = 'https://appwrite.io/auth/oauth2/failure',
-    List scopes = const [],
+    String? success,
+    String? failure,
+    List? scopes,
   }) async {
     try {
       await _account.createOAuth2Session(
         provider: provider,
         success: success,
         failure: failure,
+        scopes: scopes,
       );
       _getUser();
       return true;
@@ -224,6 +227,17 @@ class AuthNotifier extends ChangeNotifier {
       _error = e.message;
       notifyListeners();
       return false;
+    }
+  }
+
+  Future<Session?> getSession({required String sessionId}) async {
+    try {
+      final res = await _account.getSession(sessionId: sessionId);
+      return Session.fromMap(res.data);
+    } on AppwriteException catch (e) {
+      _error = e.message;
+      notifyListeners();
+      return null;
     }
   }
 
@@ -268,8 +282,8 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   Future<bool> updatePassword({
-    required String oldPassword,
     required String password,
+    String? oldPassword,
   }) async {
     try {
       final res = await _account.updatePassword(
@@ -303,14 +317,14 @@ class AuthNotifier extends ChangeNotifier {
   Future<bool> updateRecovery({
     required String userId,
     required String password,
-    required String confirmPassword,
+    required String passwordAgain,
     required String secret,
   }) async {
     try {
       await _account.updateRecovery(
           userId: userId,
           password: password,
-          passwordAgain: confirmPassword,
+          passwordAgain: passwordAgain,
           secret: secret);
       return true;
     } on AppwriteException catch (e) {
