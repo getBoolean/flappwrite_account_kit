@@ -13,8 +13,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  appwrite:
-    git: https://github.com/appwrite/sdk-for-flutter
+  appwrite: ^1.0.2
 
 dev_dependencies:
   flutter_test:
